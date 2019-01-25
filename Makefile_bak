@@ -1,6 +1,6 @@
 include_dir=build
 source=chapters/*.md
-title='test'
+title='电子书模板'
 filename='ebook'
 
 
@@ -10,7 +10,7 @@ markdown:
 	awk 'FNR==1{print ""}{print}' $(source) > $(filename).md
 
 html: markdown
-	pandoc -s $(filename).md -t html5 -o dist/$(filename).html -c style.css \
+	pandoc -s $(filename).md -t html5 -o index.html -c style.css \
 		--include-in-header $(include_dir)/head.html \
 		--include-before-body $(include_dir)/author.html \
 		--include-before-body $(include_dir)/share.html \
@@ -18,24 +18,7 @@ html: markdown
 		--title-prefix $(title) \
 		--toc-depth=4 \
 		--toc
-resource:
-	cp -r css dist/
-	cp -r img dist/
-	cp style.css dist/
-singlehtml: resource 
-	for i in $(source); do \
-		file=$$(basename -- "$$i"); \
-		file="$${file%%.*}"; \
-		pandoc --mathml -f markdown -s $$i -t html5 -o dist/$$file.html -c style.css \
-		--include-in-header $(include_dir)/head.html \
-		--include-before-body $(include_dir)/author.html \
-		--include-before-body $(include_dir)/share.html \
-		--include-after-body $(include_dir)/stats.html \
-		--title-prefix $(title) \
-		--toc-depth=4 \
-		--toc ; \
-	done
- 
+
 epub: markdown
 	pandoc -s $(filename).md -t epub -o $(filename).epub \
 		--epub-metadata $(include_dir)/metadata.xml \
